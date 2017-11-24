@@ -8,7 +8,7 @@ const cookieParser = require('cookie-parser')
 const socketIO = require('socket.io')
 
 const app = express()
-let server = http.createServer(app)
+const server = http.createServer(app)
 
 process.on('uncaughtException', err =>
   console.error('uncaught exception: ', err))
@@ -28,8 +28,24 @@ app.use(express.static(path.join(__dirname, '/../public'))) // public folder!
 app.use(cookieParser())
 
 // Routes
-app.get('/', (req, res) =>  {
-  res.send('Hello World!') 
+app.get('/', (req, res) => {
+  res.render('index')
+})
+
+// Socket IO
+const io = socketIO(server)
+
+io.on('connection', (socket) => {
+  console.log('new user connected')
+
+  socket.on('disconnect', () => {
+    console.log('user was disconnected')
+  })
+
+  socket.on('messages', (data) => {
+    socket.emit('broad', data)
+    socket.broadcast.emit('broad', data)
+  })
 })
 
 // Server

@@ -3,11 +3,31 @@ html(lang='en')
   head
   body
     h1 Hello World!
-    p Test
-    
+
     form#form
       input#chat_input(type='text')
       input(type='submit', value='Send')
-    
+      
+    #future
+
     script(src='/jquery-3.2.1.min.js')
     script(src='https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.4/socket.io.js')
+    script.
+      const socket = io()
+      socket.on('connect', () => {
+        console.log('connected to server')
+      })
+      
+      socket.on('disconnect', () => {
+        console.log('disconnected to server')
+      })
+      
+      socket.on('broad', function(data) {
+        $('#future').append(data+ "<br/>")
+      })
+      
+      $('form').submit(function(e){
+        e.preventDefault();
+        var message = $('#chat_input').val();
+        socket.emit('messages', message);
+      });

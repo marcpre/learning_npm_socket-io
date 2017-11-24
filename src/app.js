@@ -1,4 +1,4 @@
-require('dotenv').config()
+require('dotenv-safe').load()
 const express = require('express')
 const http = require('http')
 const path = require('path')
@@ -28,9 +28,11 @@ app.use(express.static(path.join(__dirname, '/../public'))) // public folder!
 app.use(cookieParser())
 
 // Routes
-app.use('/', posts)
+app.get('/', (req, res) =>  {
+  res.send('Hello World!') 
+})
 
-// Servier
+// Server
 const port = process.env.APP_PORT || 8080
 const host = process.env.APP_HOST || 'localhost'
 
